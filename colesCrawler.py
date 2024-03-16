@@ -1,11 +1,10 @@
-# 删除后的代码
 import os
 import requests
 from lxml import html, etree
 import pymysql
 import datetime
 productArr = []
-for i in range(1, 2):
+for i in range(1, 3):
     # Set the URL of the target website
     url = "https://www.coles.com.au/browse/fruit-vegetables?pid=homepage_cat_explorer_fruit_vege&page=" + str(i)
 
@@ -79,25 +78,25 @@ conn = pymysql.connect(
     database="price-store"
 )
 cursor = conn.cursor()
-#
-# # 准备要执行的SQL语句
+
+# SQL
 sql = "INSERT INTO goods (name, provider, price, special, unit, image, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 #
 try:
-    # 执行SQL语句
+    # execute SQL
     cursor.executemany(sql, productArr)
 
-    # 提交事务
+    # commit
     conn.commit()
-    print("数据插入成功！")
+    print("insert success!")
 
 except Exception as e:
-    # 发生异常时回滚事务
+    # rollback
     conn.rollback()
-    print("数据插入失败:", e)
+    print("insert failed:", e)
 
 finally:
-    # 关闭游标和连接
+    # close
     cursor.close()
     conn.close()
 
